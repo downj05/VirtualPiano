@@ -69,13 +69,14 @@ order = [
 		]
 
 class Piano:
-	def __init__(self, soundfont_path, transpose=0):
+	def __init__(self, soundfont_path, transpose=0, sustain=False):
 		self.transposition = transpose
 		self.soundfont_path = soundfont_path
 		self.order = order
 		self.channel = 0
 		self.volume_value = 128
 		self.pressed_array = [False]*len(order) # Store if a key is pressed to prevent key repetition
+		self.sustain = sustain
 
 		self.init()
 
@@ -83,6 +84,14 @@ class Piano:
 		fluidsynth.init(self.soundfont_path)
 		keyboard.hook(self.key)
 
+		if self.sustain:
+			fluidsynth.control_change(0, 64, 127)
+			fluidsynth.control_change(0, 91, 127)
+			print("Sustain ON!")
+		else:
+			fluidsynth.control_change(0, 64, 0)
+			fluidsynth.control_change(0, 91, 0)
+			print("Sustain OFF!")
 		# hooray init noise!
 		for octave in range(9):
 			fluidsynth.play_Note(Note("C", octave))

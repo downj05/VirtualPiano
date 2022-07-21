@@ -1,0 +1,2 @@
+keyboard==0.13.5
+mingus==0.6.1
